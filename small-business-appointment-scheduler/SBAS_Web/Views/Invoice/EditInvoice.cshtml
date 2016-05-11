@@ -1,0 +1,200 @@
+﻿@model SBAS_Web.Models.InvoiceModel
+@{
+    ViewBag.Title = "EditInvoice";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+    
+    var lineItems = (List<SBAS_Web.Models.InvoiceLineItemModel>)ViewData["LineItems"];
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Invoicing </h1>
+        <nav role="navigation" class="navbar navbar-inverse">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <div class="nav navbar-nav">
+                    <button id="btnViewAllInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="viewUnpaidInvoices();">View Unpaid Invoices</button>
+                    <button id="btnViewAllInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="viewAllInvoices();">View All Invoices</button>
+                    <button id="btnSearchInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="searchInvoices();">Search Invoices</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-table"></i> Edit Invoice </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @using (Html.BeginForm("EditInvoice", "Invoice"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.InvoiceID)
+                    @Html.HiddenFor(model => model.InvoiceNumber)
+                    @Html.HiddenFor(model => model.ClientID)
+                    @Html.HiddenFor(model => model.ClientFirstName)
+                    @Html.HiddenFor(model => model.ClientLastName)
+                    @Html.HiddenFor(model => model.CustomerId)
+                    @Html.HiddenFor(model => model.AmountDue)
+                    @Html.HiddenFor(model => model.AppointmentID)
+                    @Html.HiddenFor(model => model.NameofService)
+                    @Html.HiddenFor(model => model.CreateUser)
+                    @Html.HiddenFor(model => model.CreateDateTime)
+                    @Html.HiddenFor(model => model.UpdateUser)
+                    @Html.HiddenFor(model => model.UpdateDateTime)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2", })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.InvoiceNumber, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientID, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ClientID, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientFirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ClientFirstName, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientLastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ClientLastName, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AmountDue, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.AmountDue, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.DueDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SentToClient, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.SentToClient)
+                                @Html.ValidationMessageFor(model => model.SentToClient, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (lineItems.Count != 0)
+                    {
+                        <div class="table">
+                            <div class="col-md-10">
+                                <table class="table table-bordered table-hover table-striped tablesorter">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name </th>
+                                            <th>Amount (USD) </th>
+                                            <th>Actions </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var lineItem in lineItems)
+                                        {
+                                            <tr>
+                                                <td>@lineItem.ItemName</td>
+                                                <td>@lineItem.ItemLineCostOverride</td>
+                                                <td>
+                                                    @Html.ActionLink("Edit", "UpdateInvoiceLineItem", new { invoiceLineItemID = lineItem.InvoiceLineItemID }) |
+                                                    <a href="#" onclick="deleteInvoiceLineItem(@lineItem.InvoiceLineItemID);">Delete</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }                    
+
+                    <div class="form-group">
+                        <div class="col-md-offset-1 col-md-10">
+                            <br />
+                            <input type="submit" value="Update" class="btn btn-default btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to Invoicing", "Index")
+</div>
+
+
+
+<script>
+
+    function viewAllInvoices() 
+    {
+        location.href = '/Invoice/ViewInvoices';
+    }
+
+    function viewUnpaidInvoices() 
+    {
+        location.href = '/Invoice/ViewUnpaidInvoices';
+    }
+
+    function searchInvoices() 
+    {
+        location.href = '/Invoice/FindInvoice';
+    }
+
+    function deleteInvoiceLineItem(invoiceLineItemId)
+    {
+        $.confirm({
+            text: "You are about to delete this invoice line item. Do you want to proceed?",
+            confirm: function (button) {
+                location.href = '/Invoice/DeleteInvoiceLineItem?invoiceLineItemID=' + invoiceLineItemId;
+            },
+            cancel: function (button) {
+                // Do nothing
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,177 @@
+﻿@using Microsoft.AspNet.Identity
+@model SBAS_Web.Models.ManageUserInfoViewModel
+@using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
+@{
+    ViewBag.Title = "Manage User Info";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+}
+
+@*<p>You're logged in as <strong>@User.Identity.GetUserName()</strong>.</p>*@
+@*<h2>@ViewBag.Title.</h2>*@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-male"></i> Manage Customer Info</h3>
+    </div>
+    <div class="panel-body">
+        @*<div class="container table-bordered" style="border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-width:1px; border-color: black;">*@
+        <div class="row">
+            @using (Html.BeginForm("ManageUserInfo", "Account", FormMethod.Post, new { @id = "formManageCustomer", @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @*<h4 style="margin-left: 18px;">Change User Info</h4>
+                <hr />*@
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.Longitude)
+                @Html.HiddenFor(m => m.Latitude)
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CompanyName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.LastName, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.AddressLine1, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.AddressLine1, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label"></div>
+                        @*@Html.LabelFor(m => m.AddressLine2, new { @class = "col-md-2 control-label" })*@
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.AddressLine2, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StateList, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(m => m.SelectedStateID, Model.StateList, new { @class = "form-control", @style = "width: 81px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CityList, new { @class = "col-md-4 control-label" })
+                        <div id="citylistdiv" class="col-md-8">
+                            @Html.DropDownListFor(m => m.SelectedCityID, Model.CityList, new { @class = "form-control", @style = "width: 208px;" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ZipCode, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.MobileNumber, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FaxNumber, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.FaxNumber, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                    <div class="form-group" style="visibility:hidden">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control k-textbox", @style = "width: 368px;" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <input type="submit" class="btn btn-default btn-primary"  style ="margin-left: 25px;" value="Change User Info" />
+                            @* Had to revert to original button for regular POST since when user entered incorrect information into the form
+                               the errors were no longer being properly displayed to the user*@
+                            @*<input id="btnManageCustomer" type="button" class="btn btn-default btn-primary" value="Change User Info" style="margin-left: 25px; padding-right: 12px; padding-left: 12px;" />*@
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@*@section Scripts {
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/kendocss")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/kendojs")
+    }*@
+
+<script>
+    $(function () {
+
+        //$("#CompanyName").kendoTextBlock();
+        $("#SelectedCityID").kendoDropDownList();
+        $("#SelectedStateID").kendoDropDownList();
+
+        $("#SelectedStateID").change(function () {
+
+            var $selectedStateId = $("#SelectedStateID  option:selected");
+            var id = $selectedStateId.val();
+            $.ajax({
+                url: "/Account/GetCityByState",
+                type: "GET",
+                data: { id: id },
+                cache: false,
+                success: function (result) {
+                    $('#citylistdiv').html(result);
+                    $("#SelectedCityID").kendoDropDownList();
+                },
+                error: function (result) {
+                    alert(result);
+                }
+            });
+        });
+
+        $("#btnManageCustomer").click(function (e) {
+
+            var lmodel = $('#formManageCustomer').serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/Account/ManageUserInfo",
+                data: lmodel,
+                cache: true,
+                success: function (result) {
+                    //window.data("kendoWindow").close();
+                    location.href = '/Customer/Index';
+                },
+                error: function (result) {
+                    alert(result);
+                    $('#DisplayArea').html(result);
+                    $("#SelectedStateID").kendoDropDownList();
+                    $("#SelectedCityID").kendoDropDownList();
+                }
+            });
+
+        });
+    });
+</script>

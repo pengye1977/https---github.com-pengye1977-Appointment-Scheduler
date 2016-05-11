@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="SBAS" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^E:\\Work\\Personal\\PennState\\Homework\\Course12\\Project\\small-business-appointment-scheduler\\SBAS_Web\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^E:\\Work\\Personal\\PennState\\Homework\\Course12\\Project\\small-business-appointment-scheduler\\SBAS_Web\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="SBAS-Web.config Connection String" description="" value="data source=tcp:f0tjhpvrv9.database.windows.net,1433;initial catalog=SBAS_db;user id=ye.peng@f0tjhpvrv9;password=F1x1tbank;MultipleActiveResultSets=True" tags="">
+    <parameterEntry kind="XmlFile" scope="E:\\Work\\Personal\\PennState\\Homework\\Course12\\Project\\small-business-appointment-scheduler\\SBAS_Web\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='SBAS']/@connectionString" />
+  </parameter>
+</parameters>

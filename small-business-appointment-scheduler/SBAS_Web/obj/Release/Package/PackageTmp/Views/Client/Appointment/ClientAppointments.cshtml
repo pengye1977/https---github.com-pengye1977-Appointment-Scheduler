@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_ClientLoggedInLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+
+
+<h2>Appointments Layout Page</h2>
+<div class=" row">
+    <div><div class="DefaultColor" style="height: 16px;width: 16px; padding-left: 15px; float: left;"></div><div style="float: left; padding-right: 15px;"> Uncompleted</div></div>
+    <div><div class="CompletedColor" style="height: 16px;width: 16px; float: left;"></div><div style="float: left; padding-right: 15px;"> Completed</div></div>
+    <div><div class="ReadyForInvoicingColor" style="height: 16px;width: 16px; float: left;"></div><div style="float: left; padding-right: 15px;"> Ready for Invoicing</div></div>
+    <div><div class="InvoicedColor" style="height: 16px;width: 16px; float: left;"></div><div style="float: left; padding-right: 15px;"> Invoiced</div></div>
+</div>
+@Html.Partial("_ClientSchedulerReadOnly")

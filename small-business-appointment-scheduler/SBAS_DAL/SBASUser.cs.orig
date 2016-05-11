@@ -1,0 +1,105 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NPoco;
+
+namespace SBAS_DAL
+{
+    public class SBASUser : Base
+    {
+        public bool CreateSBASUserByEmail(string email, SBAS_Core.Model.SBASUser aSBABUserInfo)
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                var sqlbuilder = Sql.Builder;
+                sqlbuilder.Append("SELECT Id FROM dbo.AspNetUsers WHERE Email = @Email ", 
+                    new {Email = email} );
+
+                string s = db.Single<string>(sqlbuilder);
+
+                aSBABUserInfo.Id = s;
+
+                db.Insert("SBASUser", "UserId", true, aSBABUserInfo);
+
+                return true;
+            }
+        }
+
+        public SBAS_Core.Model.SBASUser GetSBASUserByEmail(string email)
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                var sqlbuilder = Sql.Builder;
+                sqlbuilder.Append("SELECT SBASUser.*, dbo.AspNetUsers.Email FROM " +
+                    "dbo.AspNetUsers INNER JOIN SBASUser ON dbo.AspNetUsers.Id = SBASUser.Id " +
+                    "WHERE dbo.AspNetUsers.Email = @Email ", new { Email = email } );
+
+                var aSBABUserInfo = db.Single<SBAS_Core.Model.SBASUser>(sqlbuilder);
+
+                return aSBABUserInfo;
+            }
+        }
+
+        public SBAS_Core.Model.SBASUser UpdateSBASUserByEmail(string email, SBAS_Core.Model.SBASUser aSBABUserInfo)
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                db.Update("SBASUser", "UserId", aSBABUserInfo);
+
+                return aSBABUserInfo;
+            }
+        }
+
+        public bool DeleteSBASUserByEmail(string email, SBAS_Core.Model.SBASUser aSBABUserInfo)
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                bool result;
+                try
+                {
+                    db.Delete("SBASUser", "UserId", aSBABUserInfo);
+                    result = true;
+                }
+                catch (Exception)
+                {
+                    result = false;
+                }
+                return result;
+            }
+        }
+
+        public List<SBAS_Core.Model.SBASUser> GetAllSBASUser_Customer()
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                var sqlbuilder = Sql.Builder;
+                sqlbuilder.Append("SELECT     SBASUser.* " +
+                                "FROM         SBASUser INNER JOIN " +
+                                "dbo.AspNetRoles ON SBASUser.Id = dbo.AspNetRoles.Id " +
+                                "WHERE     (dbo.AspNetRoles.Name = 'Customer')");
+
+                var SBABUserInfo = db.Fetch<SBAS_Core.Model.SBASUser>(sqlbuilder);
+
+                return SBABUserInfo;
+            }
+        }
+
+        public List<SBAS_Core.Model.SBASUser> GetAllSBASUser_Client()
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                var sqlbuilder = Sql.Builder;
+                sqlbuilder.Append("SELECT     SBASUser.* " +
+                                "FROM         SBASUser INNER JOIN " +
+                                "dbo.AspNetRoles ON SBASUser.Id = dbo.AspNetRoles.Id " +
+                                "WHERE     (dbo.AspNetRoles.Name = 'Client')");
+
+                var SBABUserInfo = db.Fetch<SBAS_Core.Model.SBASUser>(sqlbuilder);
+
+                return SBABUserInfo;
+            }
+        }
+    }
+}

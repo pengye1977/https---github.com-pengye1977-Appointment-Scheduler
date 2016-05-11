@@ -1,0 +1,10 @@
+syntax: glob
+Small Business Appointment Scheduler.sln.GhostDoc.xml
+_references.js
+
+/bin$
+/bin/
+/obj$
+/obj/
+/packages$
+/packages/

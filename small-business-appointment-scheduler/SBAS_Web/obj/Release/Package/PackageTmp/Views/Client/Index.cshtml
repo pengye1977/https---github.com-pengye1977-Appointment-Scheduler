@@ -1,0 +1,88 @@
+﻿@{
+    Layout = "~/Views/Shared/_ClientLoggedInLayout.cshtml";
+    var outstandingInvoices = (List<SBAS_Web.Models.InvoiceModel>)ViewData["ClientOutstandingInvoices"];
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Client <small>Overview</small></h1>
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Welcome to SBAS Client!
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-table"></i> Outstanding Invoices</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                            <tr>
+                                <th>Invoice # <i class="fa fa-sort"></i></th>
+                                <th>Due Date <i class="fa fa-sort"></i></th>
+                                <th>Amount (USD) <i class="fa fa-sort"></i></th>
+                                <th>Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var invoice in outstandingInvoices)
+                            {
+                                <tr>
+                                    <td>@invoice.InvoiceNumber</td>
+                                    <td>@invoice.DueDate</td>
+                                    <td>@invoice.AmountDue</td>
+                                    <td>@Html.ActionLink("View Details", "ViewInvoice", new { invoiceID = invoice.InvoiceID })</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right">
+                    <a href="@Url.Action("Invoicing", "Client")">
+                        View All Invoices
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-calendar"></i> Today's Appointments - @DateTime.Now.ToShortDateString()</h3>
+            </div>
+
+            <div class="table-bordered " style="border-color: #428BCA; border-width: 1px; border-radius: 3px; margin-left: 15px; margin-right: 14px; margin-top: 11px;">
+                <div class="container" style="border-color: #428BCA; border-width: 1px; border-radius: 3px;">
+                    <div class=" row">
+                        <div class="col-md-3"><div class="DefaultColor" style="height: 16px;width: 16px; float: left;"></div><div> Uncompleted</div><div style="clear:right;"></div></div>
+                        <div class="col-md-4"><div class="CompletedColor" style="height: 16px;width: 16px; float: left;"></div><div> Completed</div><div style="clear:right;"></div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"><div class="ReadyForInvoicingColor" style="height: 16px;width: 16px; float: left;"></div><div> Ready for Invoicing</div><div style="clear:right;"></div></div>
+                        <div class="col-md-4"><div class="InvoicedColor" style="height: 16px;width: 16px; float: left;"></div><div> Invoiced</div><div style="clear:right;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                @Html.Partial("_SchedulerReadOnly")
+                <div class="text-right">
+                    <a href="@Url.Action("Appointments", "Client")">
+                        View All Appointments
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

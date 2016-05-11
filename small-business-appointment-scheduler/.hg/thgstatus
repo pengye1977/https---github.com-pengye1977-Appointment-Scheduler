@@ -1,0 +1,13 @@
+mSBAS_Core/Common/Attributes
+mSBAS_Core/CustomClasses
+mSBAS_Core/Google
+rSBAS_Core/Mail
+mSBAS_Core/Model
+mSBAS_DAL
+mSBAS_UnitTest
+mSBAS_Web
+mSBAS_Web/App_Start
+mSBAS_Web/Controllers
+mSBAS_Web/Models
+aSBAS_Web/Properties/PublishProfiles
+mSBAS_Web/Scripts

@@ -1,0 +1,12 @@
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_UnitTest.dll.config
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_UnitTest.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_UnitTest.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\NPoco.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_Core.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_DAL.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\NPoco.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_Core.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\bin\Release\SBAS_DAL.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\obj\Release\SBAS_UnitTest.csprojResolveAssemblyReference.cache
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\obj\Release\SBAS_UnitTest.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_UnitTest\obj\Release\SBAS_UnitTest.pdb

@@ -1,0 +1,128 @@
+﻿@model  IEnumerable<SBAS_Web.Models.InventoryItemModel>
+
+<input id="AppointmentId" type="hidden" value="@ViewData["AppointmentId"]" />
+<input id="AppointmentCompletedId" type="hidden" value="@ViewData["appointmentCompletedId"]" />
+<input id="IsReadyForInvoice" type="hidden" value="@ViewData["IsReadyForInvoice"]" />
+
+<div class="panel panel-primary" style="height: 100%;">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-wrench"></i> Current Inventory</h3>
+    </div>
+    <div class="panel-body">
+        @(Html.Kendo().Grid<SBAS_Web.Models.InventoryItemModel>()
+            .Name("InventoryItems")
+                //.HtmlAttributes(new { style = "height:200px;" })
+            .Columns(c =>
+            {
+                c.Bound(o => o.ItemName).Groupable(false).Title("Item");
+                c.Bound(o => o.ItemDescription).Title("Description");
+                c.Bound(o => o.ItemPrice).Format("{0:c}").Title("Price");
+                c.Bound(o => o.QuantityOnHand).Title("Available");
+            }
+            )
+            .Pageable()
+            .Sortable()
+            .Resizable(resize => resize.Columns(true))
+            .Scrollable(s => s.Height(200))
+                        .Selectable(selectable => selectable
+            .Mode(GridSelectionMode.Single)
+            .Type(GridSelectionType.Row))
+                    .Events(e => e.Change("item_selected"))
+            .DataSource(ds => ds
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Model(model => model.Id(p => p.InventoryItemId))
+                        .Read(read => read.Action("InventoryItems_Read","Appointment"))
+            )
+ )
+        
+
+
+    </div>
+    <div class="panel-body" id="AddSelectionArea">
+        <div class="table-bordered" style="border-color:#428BCA; border-width: 1px; border-radius: 3px; padding: 7px;">
+            <div class="row" style="margin-bottom: 7px;">
+                <div class="col-md-2">
+                    <label id="selectedItemName">Item Price :</label>
+                </div>
+                <div class="col-md-6">
+                    @Html.Kendo().NumericTextBox().Name("itemPrice").Value(0).Spinners(true).Format("c").Decimals(2)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label id="selectedItemName">Quanity Used :</label>
+                </div>
+                <div class="col-md-6">
+                    @Html.Kendo().NumericTextBox().Name("UsedQuanity").Value(0).Spinners(true).Decimals(0).Min(0)
+                </div>
+            </div>
+            <br />
+
+            <input id="btnUseInvetory" type="submit" value="Use Selected Item" class="btn btn-default btn-primary" />
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-bordered table-striped" style="border-color:#428BCA; border-width: 1px; border-radius: 3px; padding: 7px;">
+            <div id="displayResults">
+            </div>
+            <div>
+                <span><button id="btnclose" class="btn btn-default">Close</button></span>
+                @*<span><button id="btnReadyForInvoicing" class="btn btn-primary">Mark for Invoicing</button></span>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="MyBpopup" id="insufficientStock-confirmation">
+    <span class="button b-close"><span>X</span></span>
+    <span class="logo">Low Inventory</span><br />
+    <p>You do not have enough inventory, reduce what you need and retry</p>
+</div>
+
+<div class="MyBpopup" id="markedReadyForInvoicing-confirmation">
+        <span class="button b-close"><span>X</span></span>
+        <span class="logo">Appointment</span><br />
+        <p>This completed appointment is now marked ready for invoicing.</p>
+    </div>
+
+<script type="text/javascript">
+
+
+    $(function () {
+        var window = $("#CustomDialog");
+
+        $("#btnclose").click(function (e) {
+            window.data("kendoWindow").close();
+        });
+
+        var grid = $("#InventoryItems").data("kendoGrid");
+        var rowIndex = 0;
+        var row = grid.tbody.find("* > tr:not(.k-grouping-row)").eq(rowIndex);
+
+        grid.select(row);
+
+        $.ajax({
+            type: "GET",
+            url: "/Appointment/GetAppintmentLineItems",
+            data: { id: $("#AppointmentCompletedId").val() },
+            cache: false,
+            success: function (result) {
+                $('#displayResults').html(result);
+            },
+            error: function (result) {
+                alert(result);
+            }
+        });
+
+        
+        $("#AddSelectionArea").hide();
+        SetupAppointmentCompletion();
+
+       
+
+    });
+
+</script>

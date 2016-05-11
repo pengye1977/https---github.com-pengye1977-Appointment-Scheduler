@@ -1,0 +1,215 @@
+﻿@model List<SBAS_Web.Models.InventoryItemModel>
+
+@{
+    var inventoryItems = new List<SBAS_Web.Models.InventoryItemModel>();
+    var serviceItems = new List<SBAS_Web.Models.InventoryItemModel>();
+
+    foreach (var item in Model)
+    {
+        if (item.HasPhysicalInventory)
+        {
+            inventoryItems.Add(item);
+        }
+        else
+        {
+            serviceItems.Add(item);
+        }
+    }
+
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+
+    string tabToSelect;
+    if (ViewData["TabToSelect"] == null)
+    {
+        tabToSelect = "InventoryItem";
+    }
+    else
+    {
+        tabToSelect = (string)ViewData["TabToSelect"];
+    }
+ 
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Inventory Maintenance</h1>
+        @*<ol class="breadcrumb">
+            <li class="active"><i class="fa fa-dashboard"></i> Dashboard - Inventory</li>
+        </ol>*@
+
+    <div> 
+              
+     @(Html.Kendo().TabStrip()
+          .Name("tabstrip")
+          .Animation(false)
+          .Items(tabstrip =>
+          {
+              tabstrip.Add().Text("Inventory")                  
+                  .Content(@<text>
+                    
+                        @if (inventoryItems.Count == 0)
+                        {
+                            @: You currently have no items in your inventory
+                            <br />
+                            <button id="btnAddInventoryItem" class="btn btn-primary" style="margin-top: 7px;" onclick="displayInventoryItemCreatePage();">Add Inventory Item</button>
+                        }
+                        else
+                        {                           
+                                    
+                            <div class="panel-body"> 
+                                You have @inventoryItems.Count @((inventoryItems.Count > 1) ? "items" : "item") in your inventory
+                                <br />
+                                <br />
+
+                                @* This table will be replaced with data and use either a partial or grid *@
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <thead>
+                                            <tr>
+                                                <th>Name<i class="fa fa-sort"></i></th>
+                                                <th>Description <i class="fa fa-sort"></i></th>
+                                                <th>Price <i class="fa fa-sort"></i></th>
+                                                <th>Quantity <i class="fa fa-sort"></i></th>
+                                                <th>Actions <i class="fa fa-sort"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var inventoryItem in inventoryItems)
+                                            {
+                                                <tr>
+                                                    <td>@Html.DisplayFor(modelItem => inventoryItem.ItemName)</td>
+                                                    <td>@Html.DisplayFor(modelItem => inventoryItem.ItemDescription)</td>
+                                                    <td>@Html.DisplayFor(modelItem => inventoryItem.ItemPrice)</td>
+                                                    <td>@Html.DisplayFor(modelItem => inventoryItem.QuantityOnHand)</td>
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "DisplayInventoryItemEditPage", new { inventoryItemID = inventoryItem.InventoryItemId }) |
+                                                        @* @Html.ActionLink("Delete", "DeleteInventoryItem", new { inventoryItemID = item.InventoryItemId }) *@
+                                                        <a href="#" onclick="deleteInventoryItem(@inventoryItem.InventoryItemId);">Delete</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <button id="btnAddAnotherInventoryItem" class="btn btn-primary" style="margin-top: 7px;" onclick="displayInventoryItemCreatePage();">Add Inventory Item</button>
+
+                            </div>
+                    }
+            </text>);
+
+              tabstrip.Add().Text("Business Service")
+                  .Content(@<text>
+                                
+                            @if (serviceItems.Count == 0)
+                            {
+                                @: You currently have no Business Services
+                                <br />
+                                <button id="btnAddInventoryItem" class="btn btn-primary" style="margin-top: 7px;" onclick="displayBusinessServiceCreatePage();">Add Item</button>
+                            }
+                            else
+                            {
+                                <div class="panel-body">
+                                        You have @serviceItems.Count @((serviceItems.Count > 1) ? "Business Services" : "Business Service")
+                                        <br />
+                                        <br />
+
+                                        @* This table will be replaced with data and use either a partial or grid *@
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped tablesorter">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name<i class="fa fa-sort"></i></th>
+                                                        <th>Description <i class="fa fa-sort"></i></th>
+                                                        <th>Price <i class="fa fa-sort"></i></th>
+                                                        <th>Actions <i class="fa fa-sort"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var serviceItem in serviceItems)
+                                                    {
+                                                        <tr>
+                                                            <td>@Html.DisplayFor(modelItem => serviceItem.ItemName)</td>
+                                                            <td>@Html.DisplayFor(modelItem => serviceItem.ItemDescription)</td>
+                                                            <td>@Html.DisplayFor(modelItem => serviceItem.ItemPrice)</td>
+                                                            <td>
+                                                                @Html.ActionLink("Edit", "DisplayBusinessServiceEditPage", new { inventoryItemID = serviceItem.InventoryItemId }) |
+                                                                <a href="#" onclick="deleteBusinessService(@serviceItem.InventoryItemId);">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button id="btnAddAnotherInventoryItem" class="btn btn-primary" style="margin-top: 7px;" onclick="displayBusinessServiceCreatePage();">Add Business Service</button>
+                                    </div>            
+                            }         
+            </text>);              
+          })
+    )
+          
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var tabstrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+    @if (tabToSelect == "InventoryItem")
+    {
+        @: tabstrip.select(0);       
+    }
+    else if (tabToSelect == "BusinessService")
+    {
+        @: tabstrip.select(1);       
+    }
+    
+
+    $(".confirm").confirm({
+        text: "Are you sure you want to delete that comment?",
+        title: "Confirmation required",
+        confirm: function (button) {
+            // do something
+        },
+        cancel: function (button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No",
+        post: true
+    });   
+
+    function displayInventoryItemCreatePage() {
+        location.href = '/Inventory/DisplayInventoryItemCreatePage';
+    }
+
+    function displayBusinessServiceCreatePage() {
+        location.href = '/Inventory/DisplayBusinessServiceCreatePage';
+    }
+
+    function deleteBusinessService(inventoryItemId) {
+        $.confirm({
+            text: "You are about to delete a service. Do you want to proceed?",
+            confirm: function (button) {
+                location.href = '/Inventory/DeleteBusinessService?inventoryItemID=' + inventoryItemId;
+            },
+            cancel: function (button) {
+                // do something
+            }
+        });
+       
+    }
+
+    function deleteInventoryItem(inventoryItemId) {
+        $.confirm({
+            text: "You are about to delete an item from your inventory. Do you want to proceed?",
+            confirm: function (button) {
+                location.href = '/Inventory/DeleteInventoryItem?inventoryItemID=' + inventoryItemId;
+            },
+            cancel: function (button) {
+                // do something
+            }
+        });
+    }
+
+</script>

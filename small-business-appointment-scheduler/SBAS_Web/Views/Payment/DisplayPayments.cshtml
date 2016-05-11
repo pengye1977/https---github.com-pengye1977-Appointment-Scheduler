@@ -1,0 +1,118 @@
+﻿@model List<SBAS_Web.Models.PaymentModel>
+
+@{
+    ViewBag.Title = "DisplayPayments";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Payments</h1>
+        <nav role="navigation" class="navbar navbar-inverse">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <div id="navbarCollapse" class="collapse navbar-collapse">
+                    <div class="nav navbar-nav">
+                        <button id="btnViewApptsToBeInvoiced" class="btn btn-primary" style="margin-top: 7px;" onclick="viewUnpaidInvoices();">View Unpaid Invoices</button>
+                        <button id="btnSearchInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="searchPayments();">Search Payments</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-credit-card"></i> Payments </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @if (Model.Count == 0)
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    You have no payments to display.
+                </div>
+            }
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                            <tr>
+                                <th>Invoice # <i class="fa fa-sort"></i></th>
+                                <th>Last Name <i class="fa fa-sort"></i></th>
+                                <th>First Name <i class="fa fa-sort"></i></th>
+                                <th>Payment Date <i class="fa fa-sort"></i></th>
+                                <th>Payment Amount (USD) <i class="fa fa-sort"></i></th>
+                                <th>Payment Method <i class="fa fa-sort"></i></th>
+                                <th>Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var payment in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => payment.InvoiceNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => payment.ClientLastName)</td>
+                                    <td>@Html.DisplayFor(modelItem => payment.ClientFirstName)</td>
+                                    <td>@Html.DisplayFor(modelItem => payment.PaymentDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => payment.PaymentAmount)</td>
+                                    <td>@Html.DisplayFor(modelItem => payment.PaymentMethod)</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "UpdatePayment", new { paymentID = payment.PaymentId }) | 
+                                        <a href="#" onclick="deletePayment(@payment.PaymentId);">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Payments", "Index")
+</div>
+
+
+<script>
+
+    function viewUnpaidInvoices()
+    {
+        location.href = '/Payment/Index';
+    }
+
+    function searchPayments()
+    {
+        location.href = '/Payment/FindPayment';
+    }
+
+    function deletePayment(paymentId) {
+        $.confirm({
+            text: "You are about to delete this payment. Do you want to proceed?",
+            confirm: function (button) {
+                location.href = '/Payment/DeletePayment?paymentID=' + paymentId;
+            },
+            cancel: function (button) {
+                location.href = '/Payment/ViewPayments';
+            }
+        });
+    }
+</script>
+
+
+

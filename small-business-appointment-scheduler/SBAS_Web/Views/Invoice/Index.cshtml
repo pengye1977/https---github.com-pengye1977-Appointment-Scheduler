@@ -1,0 +1,101 @@
+﻿@model List<SBAS_Web.Models.InvoiceModel>
+
+@{
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Invoicing </h1>
+        <nav role="navigation" class="navbar navbar-inverse">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <div class="nav navbar-nav">
+                    <button id="btnViewAllInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="viewUnpaidInvoices();">View Unpaid Invoices</button>
+                    <button id="btnViewAllInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="viewAllInvoices();">View All Invoices</button>
+                    <button id="btnSearchInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="searchInvoices();">Search Invoices</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div id="DisplayArea" style="display: none;"></div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-table"></i> Appointments To Be Invoiced </h3>
+            </div>
+
+            @if (Model.Count == 0)
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    You have no appointments to be invoiced.
+                </div>
+            }
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                            <tr>
+                                <th>Client ID <i class="fa fa-sort"></i></th>
+                                <th>Last Name <i class="fa fa-sort"></i></th>
+                                <th>First Name <i class="fa fa-sort"></i></th>
+                                <th>Service <i class="fa fa-sort"></i></th>
+                                <th>Start Date <i class="fa fa-sort"></i></th>
+                                <th>End Date <i class="fa fa-sort"></i></th>
+                                <th>Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var invoice in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => invoice.ClientID)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.ClientLastName)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.ClientFirstName)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.NameofService)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.StartDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.EndDate)</td>
+                                    <td>
+                                        @Html.ActionLink("Create Invoice", "AddInvoice", new { AppointmentID = invoice.AppointmentID }) 
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function viewAllInvoices()
+    {
+        location.href = '/Invoice/ViewInvoices';
+    }
+
+    function viewUnpaidInvoices()
+    {
+        location.href = '/Invoice/ViewUnpaidInvoices';
+    }
+
+    function searchInvoices()
+    {
+        location.href = '/Invoice/FindInvoice';
+    }
+
+</script>
+

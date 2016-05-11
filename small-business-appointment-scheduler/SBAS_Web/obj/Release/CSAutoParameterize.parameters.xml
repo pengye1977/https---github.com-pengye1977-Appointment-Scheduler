@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="SBAS-Web.config Connection String" description="SBAS Connection String used in web.config by the application to access the database." defaultValue="Data Source=rosebloom.arvixe.com;Initial Catalog=SBAS_Dev;Persist Security Info=True;User ID=SWENG500_User;Password=Pa$$w0rd!;MultipleActiveResultSets=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="E:\\Work\\Personal\\PennState\\Homework\\Course12\\Project\\small-business-appointment-scheduler\\SBAS_Web\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='SBAS']/@connectionString" />
+  </parameter>
+</parameters>

@@ -1,0 +1,20 @@
+﻿@{
+    var lowInventoryItems = (List<SBAS_Web.Models.InventoryItemModel>)ViewData["LowInventoryItems"];
+}
+    <table class="table table-bordered table-hover table-striped tablesorter">
+        <thead>
+            <tr>
+                <th>Description<i class="fa fa-sort"></i></th>
+                <th>Quanity On-Hand <i class="fa fa-sort"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in lowInventoryItems)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.QuantityOnHand</td>
+                </tr>
+            }
+        </tbody>
+    </table>

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<SBAS_Web.Models.AppointmentLineItemModel>
+
+
+<div class="panel-body" style="height:100%;">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped tablesorter">
+            <thead>
+                <tr>
+                    <th>Item<i class="fa"></i></th>
+                    <th>Description <i class="fa"></i></th>
+                    <th>Price <i class="fa"></i></th>
+                    <th>Quantity <i class="fa"></i></th>
+                    <th>Actions <i class="fa"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => p.ItemName)</td>
+                        <td>@Html.DisplayFor(modelItem => p.ItemDescription)</td>
+                        <td>@Html.DisplayFor(modelItem => p.ItemPrice)</td>
+                        <td>@Html.DisplayFor(modelItem => p.QuantityUsed)</td>
+                        <td>
+                            <a href="#" onclick="deleteAppointmentLineItem(@p.AppointmentLineItemId);">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function deleteAppointmentLineItem(id) {
+        $.confirm({
+            text: "You are about to delete an appointment used item. Do you want to proceed?",
+            confirm: function (button) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Appointment/DeleteAppintmentLineItem", 
+                    data: { id: id},
+                    cache: false,
+                    success: function (result) {
+                        $('#displayResults').html(result);
+                        var grid = $("#InventoryItems").data("kendoGrid");
+                        grid.dataSource.read();
+                    },
+                    error: function (result) {
+                        alert(result);
+                    }
+                });
+                location.href = '/appointment/DeleteInventoryItem?inventoryItemID=' + inventoryItemId;
+            },
+            cancel: function (button) {
+                // do something
+            },
+                confirmButton: "Yes",
+        cancelButton: "No"
+        });
+    }
+</script>

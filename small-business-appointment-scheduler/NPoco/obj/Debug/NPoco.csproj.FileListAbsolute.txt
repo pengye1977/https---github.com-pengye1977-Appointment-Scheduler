@@ -1,0 +1,5 @@
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\NPoco\bin\Debug\NPoco.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\NPoco\bin\Debug\NPoco.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\NPoco\obj\Debug\NPoco.csprojResolveAssemblyReference.cache
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\NPoco\obj\Debug\NPoco.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\NPoco\obj\Debug\NPoco.pdb

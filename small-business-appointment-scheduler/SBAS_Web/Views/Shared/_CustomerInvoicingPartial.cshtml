@@ -1,0 +1,25 @@
+﻿ @{  
+     var outstandingInvoices = (List<SBAS_Web.Models.InvoiceModel>)ViewData["OutstandingInvoices"];
+ }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped tablesorter">
+            <thead>
+                <tr>
+                    <th>Invoice # <i class="fa fa-sort"></i></th>
+                    <th>Due Date <i class="fa fa-sort"></i></th>
+                    <th>Amount (USD) <i class="fa fa-sort"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var invoice in outstandingInvoices)
+                {
+                    <tr>
+                        <td>@invoice.InvoiceNumber</td>
+                        <td>@invoice.DueDate</td>
+                        <td>@invoice.AmountDue</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

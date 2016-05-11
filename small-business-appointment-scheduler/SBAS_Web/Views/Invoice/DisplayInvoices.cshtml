@@ -1,0 +1,129 @@
+﻿@model List<SBAS_Web.Models.InvoiceModel>
+
+@{
+    ViewBag.Title = "DisplayInvoices";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Invoicing</h1>
+        <nav role="navigation" class="navbar navbar-inverse">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <div id="navbarCollapse" class="collapse navbar-collapse">
+                    <div class="nav navbar-nav">
+                        <button id="btnViewApptsToBeInvoiced" class="btn btn-primary" style="margin-top: 7px;" onclick="viewApptsToBeInvoiced();">View Appts To Be Invoiced</button>
+                        <button id="btnSearchInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="searchInvoices();">Search Invoices</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-table"></i> Invoices </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @if (Model.Count == 0)
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    You have no invoices to display.
+                </div>
+            }
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped tablesorter">
+                        <thead>
+                            <tr>
+                                <th>Invoice # <i class="fa fa-sort"></i></th>
+                                <th>Due Date <i class="fa fa-sort"></i></th>
+                                <th>Amount (USD) <i class="fa fa-sort"></i></th>
+                                <th>Last Name <i class="fa fa-sort"></i></th>
+                                <th>First Name <i class="fa fa-sort"></i></th>
+                                <th>Sent To Client <i class="fa fa-sort"></i></th>
+                                <th>Paid <i class="fa fa-sort"></i></th>
+                                <th>Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var invoice in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => invoice.InvoiceNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.DueDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.AmountDue)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.ClientLastName)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.ClientFirstName)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.SentToClient)</td>
+                                    <td>@Html.DisplayFor(modelItem => invoice.IsPaid)</td>
+                                    <td>
+                                        @Html.ActionLink("Details", "ViewInvoiceDetails", new {invoiceID = invoice.InvoiceID }) | @Html.ActionLink("Edit", "UpdateInvoice", new { invoiceID = invoice.InvoiceID }) |
+                                        <a href="#" onclick="deleteInvoice(@invoice.InvoiceID);">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Invoicing", "Index")
+</div>
+
+
+<script>
+
+    function viewAllInvoices() {
+        location.href = '/Invoice/ViewInvoices';
+    }
+
+    function addInvoice() {
+        location.href = '/Invoice/NewInvoice';
+    }
+
+    function searchInvoices() 
+    {
+        location.href = '/Invoice/FindInvoice';
+    }
+
+    function viewApptsToBeInvoiced()
+    {
+        location.href = '/Invoice/Index';
+    }
+
+    function deleteInvoice(invoiceId)
+    {
+        $.confirm({
+            text: "You are about to delete this invoice. Do you want to proceed?",
+            confirm: function (button) {
+                location.href = '/Invoice/DeleteInvoice?invoiceID=' + invoiceId;
+            },
+            cancel: function (button) {
+                location.href = '/Invoice/ViewInvoices';
+            }
+        });
+    }
+        
+</script>
+
+

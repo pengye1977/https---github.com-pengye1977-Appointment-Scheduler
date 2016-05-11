@@ -1,0 +1,42 @@
+﻿@{
+    var startdate = DateTime.Now;
+}
+@(Html.Kendo().Scheduler<SBAS_Web.Models.AppointmentModel>()
+                      .Name("scheduler")
+                      .Date(new DateTime(startdate.Year, startdate.Month, startdate.Day))
+                      .StartTime(new DateTime(startdate.Year, startdate.Month, startdate.Day, 8, 00, 00))
+                      .ShowWorkHours(true)
+                      .Views(views => views.DayView(day => day.Selected(true)))
+                      .Editable(false)
+                      .Events(e => e.Navigate("scheduler_navigate"))
+                      .AllDaySlot(false)
+                      .EventTemplate("<div class='appointment-template " +
+                                    "# if(AppointmentState == 'Default') {#" +
+                                    "DefaultColor" +
+                                    "#} else if(AppointmentState == 'Completed') {#" +
+                                    "CompletedColor" +
+                                    "#} else if(AppointmentState == 'ReadyForInvoicing') {#" +
+                                    "ReadyForInvoicingColor" +
+                                    "#} else if(AppointmentState == 'Invoiced') {# " +
+                                    "InvoicedColor" +
+                                    "#}#' style='height:100%'>" +
+                                    "<p>" +
+                                        "#= kendo.toString(start, 'hh:mm') # - #= kendo.toString(end, 'hh:mm') #" +
+                                    "</p>" +
+                                                    "<p>#= title #</p>" +
+                                    "</div>")
+                      .Timezone("Etc/UTC")
+                      .DataSource(d => d
+                          .Model(m =>
+                          {
+                              m.Id(f => f.AppointmentId);
+                              m.Field(f => f.Title).DefaultValue("No title");
+                              m.RecurrenceId(f => f.RecurrenceID);
+                          })
+                          .Events(e => e.Error("error_handler"))
+                          .Read("Appointments_Read", "Appointment")
+                      )
+                      .Group(grp => grp.Orientation(SchedulerGroupOrientation.Vertical))
+)
+
+

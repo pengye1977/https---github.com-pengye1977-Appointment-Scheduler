@@ -1,0 +1,170 @@
+﻿@model SBAS_Web.Models.InvoiceModel
+@{
+    ViewBag.Title = "AddInvoice";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+
+    var apptItems = (List<SBAS_Web.Models.InvoiceLineItemModel>)ViewData["ApptItems"];
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Invoicing </h1>
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-table"></i> Create Invoice </h3>
+    </div>
+    <div class="panel-body">
+        
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Please select due date.
+        </div>
+
+        <div class="table-responsive">
+
+            @using (Html.BeginForm("CreateInvoice", "Invoice"))
+            {
+                @Html.AntiForgeryToken()
+                
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.InvoiceID)
+                    @Html.HiddenFor(model => model.InvoiceNumber)
+                    @Html.HiddenFor(model => model.ClientID)
+                    @Html.HiddenFor(model => model.ClientFirstName)
+                    @Html.HiddenFor(model => model.ClientLastName)
+                    @Html.HiddenFor(model => model.CustomerId)
+                    @Html.HiddenFor(model => model.AmountDue)
+                    @Html.HiddenFor(model => model.AppointmentID)
+                    @Html.HiddenFor(model => model.NameofService)
+                    @Html.HiddenFor(model => model.CreateUser)
+                    @Html.HiddenFor(model => model.CreateDateTime)
+                    @Html.HiddenFor(model => model.UpdateUser)
+                    @Html.HiddenFor(model => model.UpdateDateTime)
+
+                    <div class="form-group">  
+                            @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2",  })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.InvoiceNumber, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientID, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ClientID, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientFirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ClientFirstName, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientLastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ClientLastName, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NameofService, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.NameofService, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AmountDue, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.AmountDue, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.DueDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SentToClient, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.SentToClient)
+                                @Html.ValidationMessageFor(model => model.SentToClient, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (apptItems.Count != 0)
+                    {
+                        <div class="table">
+                            <div class="col-md-10">
+                                <table class="table table-bordered table-hover table-striped tablesorter">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name </th>
+                                            <th>Quantity </th>
+                                            <th>Cost (each) </th>
+                                            <th>Total Cost (USD) </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var apptItem in apptItems)
+                                        {
+                                            <tr>
+                                                <td>@apptItem.ItemName</td>
+                                                <td>@apptItem.ItemQuantity</td>
+                                                <td>@apptItem.ItemLineCostOverride</td>
+                                                <td>@apptItem.ItemTotalCost</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="form-group">
+                        <div class="col-md-offset-1 col-md-10">
+                            <br />
+                            <input type="submit" value="Create Invoice" class="btn btn-default btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Invoicing", "Index")
+</div>
+
+
+
+<script>
+    
+    var sentToClientCheckBox = document.getElementById("SentToClient");
+    
+    sentToClientCheckBox.checked = true;
+
+</script>

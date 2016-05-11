@@ -1,0 +1,36 @@
+﻿
+@model SBAS_Web.Models.AppointmentModel
+@{
+    //required in order to render validation attributes
+    ViewContext.FormContext = new FormContext();
+}
+
+@functions{
+    public Dictionary<string, object> generateDatePickerAttributes(
+           string elementId,
+           string fieldName,
+           string dataBindAttribute,
+           Dictionary<string, object> additionalAttributes = null)
+    {
+
+        Dictionary<string, object> datePickerAttributes = additionalAttributes != null ? new Dictionary<string, object>(additionalAttributes) : new Dictionary<string, object>();
+
+        datePickerAttributes["id"] = elementId;
+        datePickerAttributes["name"] = fieldName;
+        datePickerAttributes["data-bind"] = dataBindAttribute;
+        datePickerAttributes["required"] = "required";
+        datePickerAttributes["style"] = "z-index: inherit;";
+
+        return datePickerAttributes;
+    }
+}
+<div class="k-edit-label">
+    @(Html.LabelFor(model => model.AppointmentCompleted))
+</div>
+<div data-container-for="appointmentCompleted" class="k-edit-field">
+    <input data-bind="checked: appointmentCompleted" data-val="true" id="AppointmentCompleted" name="AppointmentCompleted" type="checkbox" />
+</div>
+
+@{
+    ViewContext.FormContext = null;
+}

@@ -1,0 +1,226 @@
+﻿@{
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+    ViewBag.Title = "SBAS - Appointments";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Appointments Calendar</h1>
+    </div>
+</div>
+@{
+    var startdate = DateTime.Now;
+}
+
+<div id="CustomDialog" style="display: none;"></div>
+
+<div class="row">
+    <div><div class="DefaultColor" style="height: 16px;width: 16px; padding-left: 15px; float: left;"></div><div style="float: left; padding-right: 15px;"> Uncompleted</div></div>
+    <div><div class="CompletedColor" style="height: 16px;width: 16px; float: left;"></div><div style="float: left; padding-right: 15px;"> Completed</div></div>
+    <div><div class="ReadyForInvoicingColor" style="height: 16px;width: 16px; float: left;"></div><div style="float: left; padding-right: 15px;"> Ready for Invoicing</div></div>
+    <div><div class="InvoicedColor" style="height: 16px;width: 16px; float: left;"></div><div style="float: left; padding-right: 15px;"> Invoiced</div></div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        @(Html.Kendo().Scheduler<SBAS_Web.Models.AppointmentModel>()
+              .Name("scheduler")
+              .Date(new DateTime(startdate.Year, startdate.Month, startdate.Day))
+              .StartTime(new DateTime(startdate.Year, startdate.Month, startdate.Day, 8, 00, 00))
+              .Height(700)
+              .AllDaySlot(false)
+              .ShowWorkHours(true)
+                      .Events(e =>
+                {
+                    e.Edit("scheduler_edit");
+                    e.MoveEnd("scheduler_moveEnd");
+                    e.ResizeEnd("scheduler_resizeEnd");
+                    e.Remove("Scheduler_delete");
+                })
+              .EventTemplate("<div class='appointment-template " +
+                                    "# if(AppointmentState == 'Default') {#" +
+                                    "DefaultColor" +
+                                    "#} else if(AppointmentState == 'Completed') {#" +
+                                    "CompletedColor" +
+                                    "#} else if(AppointmentState == 'ReadyForInvoicing') {#" +
+                                    "ReadyForInvoicingColor" +
+                                    "#} else if(AppointmentState == 'Invoiced') {# " +
+                                    "InvoicedColor" +
+                                    "#}#' style='height:100%'>" +
+                                    "<p>" +
+                                        "#= kendo.toString(start, 'hh:mm') # - #= kendo.toString(end, 'hh:mm') #" +
+                                    "</p>" +
+                                                    "<p>#= title #</p>" +
+                                    "</div>")
+              .Views(views =>
+              {
+                  views.DayView(); //dayView => dayView.Selected(true)
+                  views.WeekView(weekview => weekview.Selected(true));
+                  views.MonthView();
+              })
+              .Editable(editable => editable.TemplateName("AppointmentEditorTemplate"))
+              .Timezone("Etc/UTC")
+              .DataSource(d => d
+                  .Model(m =>
+                  {
+                      m.Id(f => f.AppointmentId);
+                      m.Field(f => f.Title).DefaultValue("No title");
+                      m.RecurrenceId(f => f.RecurrenceID);
+                  })
+                  .Events(e => e.Error("error_handler"))
+                  .Read("Appointments_Read", "Appointment")
+                  .Destroy("Appointments_Destroy", "Appointment")
+                  .Update("Appointments_Update", "Appointment")
+                  .Create("Appointments_Create", "Appointment")
+              )
+              .Group(grp => grp.Orientation(SchedulerGroupOrientation.Horizontal))
+              .Resources(resource =>
+              {
+                  resource.Add(m => m.ClientId)
+                      .Title("Client")
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                      .DataSource(source => source.Read(read => read.Action("CustomerClientsAsJson", "Appointment")));
+                  resource.Add(m => m.ServiceTypeId)
+                      .Title("Service Type")
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                      .DataSource(source => source.Read(read => read.Action("CustomerServiceTypesAsJson", "Appointment")));
+              }
+              )
+        )
+    </div>
+</div>
+@Html.Partial("_MyBpopupPartial")
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "errors:";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            $("#customerrormessage").text(message);
+            $('#AppointmentCustomErrorMessage').bPopup({
+                zIndex: 100000
+            });
+
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            scheduler.one("dataBinding", function (e2) {
+                //prevent saving if server error is thrown
+                e2.preventDefault();
+            });
+        }
+    }
+
+    function scheduler_edit(e) {
+        if (!isEventChangable(e))
+            e.preventDefault();
+    }
+
+    function Scheduler_delete(e) {
+        if (!isEventChangable(e))
+            e.preventDefault();
+    }
+
+    function scheduler_moveEnd(e) {
+        if (!isEventChangable(e))
+            e.preventDefault();
+    }
+
+
+    function scheduler_resizeEnd(e) {
+        if (!isEventChangable(e))
+            e.preventDefault();
+    }
+
+    function isEventChangable(e) {
+        var result;
+        switch (e.event.AppointmentState) {
+            case "Completed":
+                {
+                    result = false;
+                    $("#customerrormessage").text("This appointment can not be changed because it has been makred completed.");
+                    $('#AppointmentCustomErrorMessage').bPopup();
+                }
+                break;
+            case "ReadyForInvoicing":
+                {
+                    result = false;
+                    $("#customerrormessage").text("This appointment can not be changed because it has been makred ready for invoicing.");
+                    $('#AppointmentCustomErrorMessage').bPopup();
+                }
+                break;
+            case "Invoiced":
+                {
+                    result = false;
+                    $("#customerrormessage").text("This appointment can not be changed because it has been invoiced.");
+                    $('#AppointmentCustomErrorMessage').bPopup();
+                }
+                break;
+            default:
+                result = true;
+        }
+        return result;
+    };
+</script>
+
+@Html.Partial("_MyBpopupMapCanvasPartial")
+
+<script type="text/javascript">
+    $.contextMenu({
+        selector: '.k-event',
+        trigger: 'right',
+        callback: function (key, options) {
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            var dataSource = scheduler.dataSource;
+            var uid = $(this).attr("data-uid");
+            var dataItem = dataSource.getByUid(uid);
+            if (typeof dataItem === "undefined") {
+                $('#AppointmentError').bPopup();
+                return;
+            }
+            if (key == "completed") {
+                MarkAppointmentComplete(dataItem, uid);
+            } else if (key == "usedresources") {
+                if (dataItem.AppointmentCompletedId != null) {
+                    LoadAppointmentCompletedDialog("/Appointment/MarkAppointmentCompleted", 800, 900, dataItem.AppointmentId, dataItem.AppointmentCompletedId);
+                } else {
+                    $('#AppointmentNotCompleted').bPopup();
+                }
+            } else if (key == "invoice") {
+                MarkAppointmentReadyToInvoice(dataItem, uid);
+            } else if (key == "map") {
+                ShowMap(dataItem, uid);
+            }
+        },
+        items: {
+            "completed": {
+                name: "Appointment Completed",
+                icon: "greencheck"
+            },
+            "usedresources": {
+                name: "Used Inventory",
+                icon: "table"
+            }
+            ,
+            "invoice": {
+                name: "Mark for Invoicing",
+                icon: "edit"
+            },
+            "map": {
+                name: "Client Map Display",
+                icon: "map"
+            }
+        }
+    });
+</script>
+
+

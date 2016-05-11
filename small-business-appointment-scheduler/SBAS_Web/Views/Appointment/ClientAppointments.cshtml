@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/Views/Shared/_ClientLoggedInLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+
+
+<h2>Appointments Layout Page</h2>
+
+@{
+    var startdate = DateTime.Now;
+}
+
+@(Html.Kendo().Scheduler<SBAS_Web.Models.AppointmentModel>()
+                      .Name("scheduler")
+                      .Date(new DateTime(startdate.Year, startdate.Month, startdate.Day))
+                      .StartTime(new DateTime(startdate.Year, startdate.Month, startdate.Day, 8, 00, 00))
+                      .ShowWorkHours(true)
+                      .Views(views => views.DayView(day => day.Selected(true)))
+                      .Editable(false)
+                      .AllDaySlot(false)
+                      .Timezone("Etc/UTC")
+                      .DataSource(d => d
+                          .Model(m =>
+                          {
+                              m.Id(f => f.AppointmentId);
+                              m.Field(f => f.Title).DefaultValue("No title");
+                              m.RecurrenceId(f => f.RecurrenceID);
+                          })
+                          .Events(e => e.Error("error_handler"))
+                          .Read("Appointments_Read", "Appointment")
+                      )
+                      .Group(grp => grp.Orientation(SchedulerGroupOrientation.Vertical))
+      )
+
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            AppointmentAlreadyCompelted("Warrning", "appointmentnowreadytoinvoice-confirmation");
+
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            scheduler.one("dataBinding", function (e) {
+                //prevent saving if server error is thrown
+                e.preventDefault();
+            });
+        }
+    }
+
+    function scheduler_add(e) {
+
+    }
+</script>

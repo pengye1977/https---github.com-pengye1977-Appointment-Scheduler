@@ -1,0 +1,72 @@
+﻿@model SBAS_Web.Models.InvoiceLineItemModel
+@{
+    ViewBag.Title = "EditInvoiceLineItem";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Invoicing </h1>
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-table"></i> Edit Invoice Line Item</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @using (Html.BeginForm("EditInvoiceLineItem", "Invoice"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.InvoiceLineItemID)
+                    @Html.HiddenFor(model => model.InvoiceId)
+                    @Html.HiddenFor(model => model.ItemId)
+                    @Html.HiddenFor(model => model.ItemName)
+                    @Html.HiddenFor(model => model.ItemQuantity)
+                    @Html.HiddenFor(model => model.ItemTotalCost)
+                    @Html.HiddenFor(model => model.CreateUser)
+                    @Html.HiddenFor(model => model.CreateDateTime)
+                    @Html.HiddenFor(model => model.UpdateUser)
+                    @Html.HiddenFor(model => model.UpdateDateTime)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ItemName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.ItemName, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ItemLineCostOverride, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ItemLineCostOverride, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ItemLineCostOverride, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-1 col-md-10">
+                            <br />
+                            <input type="submit" value="Update" class="btn btn-default btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Invoicing", "Index")
+</div>
+
+<script>
+
+
+</script>

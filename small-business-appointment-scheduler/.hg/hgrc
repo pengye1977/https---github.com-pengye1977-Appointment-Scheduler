@@ -1,0 +1,12 @@
+[paths]
+default = https://bitbucket.org/sweng500team1/small-business-appointment-scheduler
+
+
+[tortoisehg]
+postpull = update
+autoresolve = True
+
+[auth]
+bitbucket.org.prefix = bitbucket.org
+bitbucket.org.username = pengye
+bitbucket.org.password = Asher20100428

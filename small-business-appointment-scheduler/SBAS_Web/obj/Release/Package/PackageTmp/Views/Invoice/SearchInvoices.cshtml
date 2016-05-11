@@ -1,0 +1,95 @@
+﻿@model SBAS_Web.Models.InvoiceModel
+
+@{
+    ViewBag.Title = "SearchInvoices";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Invoicing</h1>
+        <nav role="navigation" class="navbar navbar-inverse">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <div id="navbarCollapse" class="collapse navbar-collapse">
+                    <div class="nav navbar-nav">
+                        <button id="btnViewApptsToBeInvoiced" class="btn btn-primary" style="margin-top: 7px;" onclick="viewApptsToBeInvoiced();">View Appts To Be Invoiced</button>
+                        <button id="btnSearchInvoices" class="btn btn-primary" style="margin-top: 7px;" onclick="viewAllInvoices();">View All Invoices</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-table"></i> Search Invoices </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @using (Html.BeginForm("SearchInvoices", "Invoice"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <h4>Please enter data in one of the following fields:</h4><br />
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ClientLastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ClientLastName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ClientLastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <br />
+                            <input type="submit" value="Search" class="btn btn-default btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Invoicing", "Index")
+</div>
+
+
+
+<script>
+
+    function viewAllInvoices()
+    {
+        location.href = '/Invoice/ViewInvoices';
+    }
+
+    function viewApptsToBeInvoiced()
+    {
+        location.href = '/Invoice/Index';
+    }
+
+</script>

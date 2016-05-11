@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NPoco;
+using SBAS_Core;
+
+
+namespace SBAS_DAL
+{
+    public class Invoice : Base
+    {
+        public Invoice GetInvoiceByID(long Id)
+       {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+           {
+                var sqlbuilder = Sql.Builder;
+                sqlbuilder.Append(string.Format("select Id, InvoiceNumber, AmountDue, DueDate, WorkPerformed, Comments FROM InvoiceInfo where Id = {0} ", Id));
+                var invoiceinfo = db.Single<Invoice>(sqlbuilder);
+
+                return invoiceinfo;
+            }
+        }
+        
+        public List<Invoice> GetAllInvoices()
+        {
+            using (var db = new NPoco.Database(GetConnectionString, DatabaseType.SqlServer2012))
+            {
+                var sqlbuilder = Sql.Builder;
+                string sql = "select Id, InvoiceNumber, AmountDue, DueDate, WorkPerformed, Comments FROM TestUserInfo";
+                sqlbuilder.Append(sql);
+                var invoiceinfo = db.Fetch<Invoice>(sqlbuilder);
+
+                return invoiceinfo;
+            }
+
+        }
+    
+    }
+}

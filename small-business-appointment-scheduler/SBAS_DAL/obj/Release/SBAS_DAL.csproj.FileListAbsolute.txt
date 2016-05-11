@@ -1,0 +1,14 @@
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\SBAS_DAL.dll.config
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\SBAS_DAL.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\SBAS_DAL.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\EntityFramework.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\EntityFramework.SqlServer.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\NPoco.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\SBAS_Core.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\NPoco.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\SBAS_Core.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\EntityFramework.xml
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\bin\Release\EntityFramework.SqlServer.xml
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\obj\Release\SBAS_DAL.csprojResolveAssemblyReference.cache
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\obj\Release\SBAS_DAL.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_DAL\obj\Release\SBAS_DAL.pdb

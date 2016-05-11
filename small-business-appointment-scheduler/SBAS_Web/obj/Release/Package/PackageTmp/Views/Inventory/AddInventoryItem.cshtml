@@ -1,0 +1,76 @@
+﻿@model SBAS_Web.Models.InventoryItemModel
+
+@{
+    ViewBag.Title = "Add Inventory Item";
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+}
+<h1>Inventory Maintenance</h1>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-wrench"></i></i> Add Inventory Item </h3>
+    </div>
+    <div class="panel-body">
+        
+        <div class="table-responsive">
+
+            @using (Html.BeginForm("CreateInventoryItem", "Inventory"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ItemName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ItemName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ItemName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ItemDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ItemDescription, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ItemDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ItemPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ItemPrice, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ItemPrice, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="quantityDiv">
+                        @Html.LabelFor(model => model.QuantityOnHand, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.QuantityOnHand, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.QuantityOnHand, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Add Item" class="btn btn-default btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div>
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.getElementById("QuantityOnHand").value = 1;
+
+</script>

@@ -1,0 +1,235 @@
+﻿@{
+    Layout = "~/Views/Shared/_CustomerLoggedInLayout.cshtml";
+    var lowInventoryItems = (List<SBAS_Web.Models.InventoryItemModel>)ViewData["LowInventoryItems"];
+    var outstandingInvoices = (List<SBAS_Web.Models.InvoiceModel>)ViewData["OutstandingInvoices"];
+}
+<input id="customerid" type="hidden" value="@ViewData["customerid"]" />
+<input id="custLat" type="hidden" value="@ViewData["custLat"]" />
+<input id="custLng" type="hidden" value="@ViewData["custLng"]" />
+
+<style>
+    /* basic positioning */
+    .legend {
+        list-style: none;
+    }
+
+        .legend li {
+            float: left;
+            margin-right: 10px;
+        }
+
+        .legend span {
+            border: 1px solid #ccc;
+            float: left;
+            width: 12px;
+            height: 12px;
+            margin: 2px;
+        }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Customer <small>Daily Overview</small></h1>
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Welcome SBAS Customer! What you have here is a current view at your fingertips the current activity for the day.
+        </div>
+    </div>
+</div>
+
+<div id="CustomDialog" style="display: none;"></div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-table"></i> Last 10 Outstanding Invoices</h3>
+            </div>
+            <div class="panel-body">
+                @* This table will be replaced with data and use either a partial or grid *@
+                <div class="table-responsive">
+                    @Html.Partial("_CustomerInvoicingPartial")
+                </div>
+                <div class="text-right">
+                    <a href="@Url.Action("Index", "Invoice")">
+                        View All Invoices
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-wrench"></i> Low Inventory</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    @Html.Partial("_CustomerInventoryPartial")
+                </div>
+                <div class="text-right">
+                    <a href="@Url.Action("Index", "Inventory")">
+                        View All Inventory
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-calendar"></i> Today's Appointments - @DateTime.Now.ToShortDateString()</h3>
+            </div>
+
+                <div class="table-bordered table-responsive" style="border-color: #428BCA; border-width: 1px; border-radius: 3px; margin-left: 15px; margin-right: 14px; margin-top: 11px;">
+                    @*<div class="container" style="border-color: #428BCA; border-width: 1px; border-radius: 3px;">*@
+                        <div class=" row">
+                        <div class="col-md-3"><div class="DefaultColor" style="height: 16px;width: 16px; float: left;"></div><div> Uncompleted</div><div style="clear:right;"></div></div>
+                        <div class="col-md-4"><div class="CompletedColor" style="height: 16px;width: 16px; float: left;"></div><div> Completed</div><div style="clear:right;"></div></div>
+                    </div>
+                        <div class="row">
+                            <div class="col-md-3"><div class="ReadyForInvoicingColor" style="height: 16px;width: 16px; float: left;"></div><div> Ready for Invoicing</div><div style="clear:right;"></div></div>
+                            <div class="col-md-4"><div class="InvoicedColor" style="height: 16px;width: 16px; float: left;"></div><div> Invoiced</div><div style="clear:right;"></div></div>
+                        </div>
+                    @*</div>*@
+                </div>
+
+            <div class="panel-body">
+                @Html.Partial("_SchedulerReadOnly")
+                <div class="text-right">
+                    <a href="@Url.Action("Index", "Appointment")">
+                        View All Appointments
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-truck"></i> Todays Route</h3>
+            </div>
+            <div class="panel-body" style="height:550px; width: 100%;">
+                <div class="table-responsive table-bordered" style="height:500px; width: 100%; border-color:#428bca; border-width: 2px; border-radius: 3px;" >
+                @* map goes here *@
+                <div id="routeMapCanvas" style="width: 100%; height: 100%; padding: 5px;  "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+@Html.Partial("_MyBpopupPartial")
+
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+@Html.Partial("_MyBpopupMapCanvasPartial")
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#btnAddClient").click(function () {
+            LoadPersonDialog("/Account/RegisterClient", 550, 1117);
+        });
+
+        ShowTodaysRouteMap($("#customerid").val(), null);
+    });
+
+    $.contextMenu({
+        selector: '.k-event',
+        trigger: 'left',
+        callback: function (key, options) {
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            var dataSource = scheduler.dataSource;
+            var uid = $(this).attr("data-uid");
+            //scheduler.editEvent(dataItem);
+            var dataItem = dataSource.getByUid(uid);
+            if (typeof dataItem === "undefined") {
+                $('#AppointmentError').bPopup();
+                return;
+            }
+            if (key == "completed") {
+                MarkAppointmentComplete(dataItem, uid);
+            } else if (key == "usedresources") {
+                if (dataItem.AppointmentCompletedId != null) {
+                    LoadAppointmentCompletedDialog("/Appointment/MarkAppointmentCompleted", 800, 900, dataItem.AppointmentId, dataItem.AppointmentCompletedId);
+                } else {
+                    $('#AppointmentNotCompleted').bPopup();
+                }
+            } else if (key == "invoice") {
+                MarkAppointmentReadyToInvoice(dataItem, uid);
+            } else if (key == "map") {
+                ShowMap(dataItem, uid);
+            }
+        },
+        items: {
+            "completed": {
+                name: "Appointment Completed",
+                icon: "greencheck"
+            },
+            "usedresources": {
+                name: "Used Inventory",
+                icon: "table"
+            }
+            ,
+            "invoice": {
+                name: "Mark for Invoicing",
+                icon: "edit"
+            },
+            "map": {
+                name: "Client Map Display",
+                icon: "map"
+            }
+        }
+    });
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            scheduler.one("dataBinding", function (ex) {
+                //prevent saving if server error is thrown
+                ex.preventDefault();
+            });
+        }
+    }
+
+    function scheduler_navigate(e) {
+        ShowTodaysRouteMap($("#customerid").val(), kendo.toString(e.date, "G"));
+    }
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            AppointmentAlreadyCompelted("Warrning", "appointmentnowreadytoinvoice-confirmation");
+            //alert(message);
+
+            var scheduler = $("#scheduler").data("kendoScheduler");
+            scheduler.one("dataBinding", function (e2) {
+                //prevent saving if server error is thrown
+                e2.preventDefault();
+            });
+        }
+    }
+
+    function scheduler_add(e) {
+
+    }
+</script>

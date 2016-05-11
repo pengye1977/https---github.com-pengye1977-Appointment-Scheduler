@@ -1,0 +1,111 @@
+﻿@model SBAS_Web.Models.InvoiceModel
+@{
+    ViewBag.Title = "ViewInvoice";
+    Layout = "~/Views/Shared/_ClientLoggedInLayout.cshtml";
+
+    var lineItems = (List<SBAS_Web.Models.InvoiceLineItemModel>)ViewData["LineItems"];
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-table"></i> View Invoice Details </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+
+            @using (Html.BeginForm("ViewInvoice", "Invoice"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.InvoiceID)
+                    @Html.HiddenFor(model => model.InvoiceNumber)
+                    @Html.HiddenFor(model => model.ClientID)
+                    @Html.HiddenFor(model => model.CustomerId)
+                    @Html.HiddenFor(model => model.AmountDue)
+                    @Html.HiddenFor(model => model.AppointmentID)
+                    @Html.HiddenFor(model => model.NameofService)
+                    @Html.HiddenFor(model => model.CreateUser)
+                    @Html.HiddenFor(model => model.CreateDateTime)
+                    @Html.HiddenFor(model => model.UpdateUser)
+                    @Html.HiddenFor(model => model.UpdateDateTime)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2", })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.InvoiceNumber, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NameofService, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.NameofService, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AmountDue, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.AmountDue, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DueDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.DueDate, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IsPaid, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.IsPaid, new { disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    @if (lineItems.Count != 0)
+                    {
+                        <div class="table">
+                            <div class="col-md-10">
+                                <table class="table table-bordered table-hover table-striped tablesorter">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name </th>
+                                            <th>Amount (USD) </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var lineItem in lineItems)
+                                        {
+                                            <tr>
+                                                <td>@lineItem.ItemName</td>
+                                                <td>@lineItem.ItemLineCostOverride</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Invoicing", "Invoicing")
+</div>
+
+<script>
+
+    function Cancel()
+    {
+        location.href = '/Invoicing';
+    }
+
+</script>
+

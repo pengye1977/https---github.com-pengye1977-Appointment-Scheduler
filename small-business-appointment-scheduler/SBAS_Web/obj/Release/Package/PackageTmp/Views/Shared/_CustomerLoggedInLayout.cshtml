@@ -1,0 +1,132 @@
+﻿@*http://startbootstrap.com/sb-admin*@
+@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    
+    <title>Dashboard - SBAS</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/kendocss")
+    @Styles.Render("~/Content/reveal-css")
+    @Styles.Render("~/Content/SBASCSS")
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")    
+    @Scripts.Render("~/bundles/jsconfirm")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+
+    @Scripts.Render("~/bundles/kendojs")
+    @Scripts.Render("~/bundles/jq-ContextMenu")
+    @Scripts.Render("~/bundles/reveal-modal")    
+    @Scripts.Render("~/bundles/bpopup")
+    @Scripts.Render("~/bundles/SBASJs")
+    @RenderSection("scripts",required:false)
+
+    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">    
+    
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">SBAS</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    @*@if (Request.IsAuthenticated)
+                        {*@
+                    <li>
+                        @Html.ActionLink("  Customer Dashboard", "Index", "Customer",
+                                routeValues: null, htmlAttributes: new { id = "customerControllerLink", @class = "fa fa-dashboard" })
+                </li>
+                <li>
+                    @Html.ActionLink("  Client List", "ClientList", "Customer",
+                                  routeValues: null, htmlAttributes: new { id = "clientControllerLink", @class = "fa  fa-male" })
+            </li>
+            <li>
+                @Html.ActionLink("  Appointments", "Index", "Appointment",
+                                 routeValues: null, htmlAttributes: new { id = "appointmentControllerLink", @class = "fa fa-calendar" })
+        </li>
+        <li>
+            @Html.ActionLink("  Inventory Maintenance", "Index", "Inventory",
+                                 routeValues: null, htmlAttributes: new { id = "inventoryControllerLink", @class = "fa fa-wrench" })
+    </li>
+    <li>
+        @Html.ActionLink("  Invoicing", "Index", "Invoice",
+                                 routeValues: null, htmlAttributes: new { id = "invoiceControllerLink", @class = "fa fa-table" })
+</li>
+<li>
+    @Html.ActionLink("  Payments", "Index", "Payment",
+                                  routeValues: null, htmlAttributes: new { id = "paymentControllerLink", @class = "fa fa-credit-card" })
+</li>
+@*}*@
+</ul>
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "ManageUserInfo", "Account", routeValues: null, htmlAttributes: new { title = "Customer Info" })
+            </li>
+            <li>
+                @Html.ActionLink("Change Password", "ResetPassword", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>           
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Sign Up", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+
+</div><!-- /.navbar-collapse -->
+</nav>
+
+<div id="page-wrapper" style="margin-top: -49px;">
+    <div style="padding-top: 50px;">
+        @RenderBody()
+    </div>
+    <br />
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <div class="container">
+            <p style="margin-left: 229px;">&copy; @DateTime.Now.Year - Small Business Appointment Scheduling System</p>
+        </div>
+    </nav>
+</div><!-- /#page-wrapper -->
+    </div><!-- /#wrapper -->
+    
+    @* Used to put the popup dialog in *@
+    <div id="infoDialogWindow" style="display: none;">
+    </div>
+</body>
+</html>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><WM002Response xmlns="ooVooWS" /></soap:Body></soap:Envelope>

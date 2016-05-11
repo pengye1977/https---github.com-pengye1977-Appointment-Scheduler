@@ -1,0 +1,6 @@
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_Core\bin\Release\SBAS_Core.dll.config
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_Core\bin\Release\SBAS_Core.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_Core\bin\Release\SBAS_Core.pdb
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_Core\obj\Release\SBAS_Core.csprojResolveAssemblyReference.cache
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_Core\obj\Release\SBAS_Core.dll
+E:\Work\Personal\PennState\Homework\Course12\Project\small-business-appointment-scheduler\SBAS_Core\obj\Release\SBAS_Core.pdb
